@@ -60,6 +60,15 @@ class Graph:
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
+        # create an empty stack and push the starting vertex
+        # create an empty visited_set
+
+        # while the stack is not empty
+        #    get current vertex (pop from stack)
+        #    print the current vertex
+        #    mark current vertex as visited - add to a visited_set
+        #    for each connection if connection is not in visited_set
+        #       push all current vertex's connections
         pass  # TODO
 
     def dft_recursive(self, starting_vertex):
