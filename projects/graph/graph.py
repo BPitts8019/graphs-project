@@ -43,6 +43,16 @@ class Graph:
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
+        # create an empty queue and enqueue the starting vertex
+        # create an empty visited_set
+
+        # while the queue is not empty
+        #    get current vertex (dequeue from queue)
+        #    print the current vertex
+        #    mark current vertex as visited - add to a visited_set
+        #    for each connection if connection is not in visited_set
+        #       enqueue current vertex's connections
+
         pass  # TODO
 
     def dft(self, starting_vertex):
@@ -67,6 +77,20 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
+        # create an empty queue and enqueue the path to starting vertex (list)
+        # create an empty visited_set
+
+        # while the queue is not empty
+        #    get current vertex Path (dequeue from queue)
+        #    set the current vertext to the LAST element of the path
+
+        #    If current vetex is destination_vertex
+        #       STOP and return path
+
+        #    mark current vertex as visited - add to a visited_set
+        #    for each connection if connection is not in visited_set
+        #       enqueue a new path with connection appended
+
         pass  # TODO
 
     def dfs(self, starting_vertex, destination_vertex):
