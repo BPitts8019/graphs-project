@@ -1,7 +1,7 @@
 """
 Simple graph implementation
 """
-from util import Stack, Queue  # These may come in handy
+from queue import Queue, LifoQueue
 
 
 class Graph:
@@ -23,9 +23,12 @@ class Graph:
         Add a directed edge to the graph.
         """
         if v1 not in self.vertices:
-            self.add_vertex(v1)
+            print(f"{v1} doesn't exist")
+            return
+
         if v2 not in self.vertices:
-            self.add_vertex(v2)
+            print(f"{v2} doesn't exist")
+            return
 
         self.vertices[v1].add(v2)
 
@@ -43,42 +46,53 @@ class Graph:
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        # create an empty queue and enqueue the starting vertex
-        # create an empty visited_set
+        search_queue = Queue()
+        visited_verticies = set()
 
-        # while the queue is not empty
-        #    get current vertex (dequeue from queue)
-        #    print the current vertex
-        #    mark current vertex as visited - add to a visited_set
-        #    for each connection if connection is not in visited_set
-        #       enqueue current vertex's connections
-
-        pass  # TODO
+        search_queue.put(starting_vertex)
+        while not search_queue.empty():
+            cur_vertex = search_queue.get()
+            if cur_vertex not in visited_verticies:
+                print(cur_vertex)
+                visited_verticies.add(cur_vertex)
+            for connection in self.get_neighbors(cur_vertex):
+                if connection not in visited_verticies:
+                    search_queue.put(connection)
 
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        # create an empty stack and push the starting vertex
-        # create an empty visited_set
+        search_stack = LifoQueue()
+        visited_verticies = set()
 
-        # while the stack is not empty
-        #    get current vertex (pop from stack)
-        #    print the current vertex
-        #    mark current vertex as visited - add to a visited_set
-        #    for each connection if connection is not in visited_set
-        #       push all current vertex's connections
-        pass  # TODO
+        search_stack.put(starting_vertex)
+        while not search_stack.empty():
+            cur_vertex = search_stack.get()
+            if cur_vertex not in visited_verticies:
+                print(cur_vertex)
+                visited_verticies.add(cur_vertex)
+            for connection in self.get_neighbors(cur_vertex):
+                if connection not in visited_verticies:
+                    search_stack.put(connection)
 
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, cur_vertex, visited_verticies=set()):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
-        pass  # TODO
+        if cur_vertex in visited_verticies:
+            return
+
+        print(cur_vertex)
+        visited_verticies.add(cur_vertex)
+
+        for connection in self.get_neighbors(cur_vertex):
+            if connection not in visited_verticies:
+                self.dft_recursive(connection, visited_verticies)
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -123,7 +137,6 @@ class Graph:
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
-    # https://github.com/LambdaSchool/Graphs/blob/master/objectives/breadth-first-search/img/bfs-visit-order.png
     graph.add_vertex(1)
     graph.add_vertex(2)
     graph.add_vertex(3)
@@ -132,6 +145,7 @@ if __name__ == '__main__':
     graph.add_vertex(6)
     graph.add_vertex(7)
     graph.add_edge(5, 3)
+    graph.add_edge(2, 8)
     graph.add_edge(6, 3)
     graph.add_edge(7, 1)
     graph.add_edge(4, 7)
@@ -139,6 +153,7 @@ if __name__ == '__main__':
     graph.add_edge(7, 6)
     graph.add_edge(2, 4)
     graph.add_edge(3, 5)
+    graph.add_edge(8, 4)
     graph.add_edge(2, 3)
     graph.add_edge(4, 6)
 
@@ -148,32 +163,32 @@ if __name__ == '__main__':
     '''
     print(graph.vertices)
 
-    # '''
-    # Valid BFT paths:
-    #     1, 2, 3, 4, 5, 6, 7
-    #     1, 2, 3, 4, 5, 7, 6
-    #     1, 2, 3, 4, 6, 7, 5
-    #     1, 2, 3, 4, 6, 5, 7
-    #     1, 2, 3, 4, 7, 6, 5
-    #     1, 2, 3, 4, 7, 5, 6
-    #     1, 2, 4, 3, 5, 6, 7
-    #     1, 2, 4, 3, 5, 7, 6
-    #     1, 2, 4, 3, 6, 7, 5
-    #     1, 2, 4, 3, 6, 5, 7
-    #     1, 2, 4, 3, 7, 6, 5
-    #     1, 2, 4, 3, 7, 5, 6
-    # '''
-    # graph.bft(1)
+    '''
+    Valid BFT paths:
+        1, 2, 3, 4, 5, 6, 7
+        1, 2, 3, 4, 5, 7, 6
+        1, 2, 3, 4, 6, 7, 5
+        1, 2, 3, 4, 6, 5, 7
+        1, 2, 3, 4, 7, 6, 5
+        1, 2, 3, 4, 7, 5, 6
+        1, 2, 4, 3, 5, 6, 7
+        1, 2, 4, 3, 5, 7, 6
+        1, 2, 4, 3, 6, 7, 5
+        1, 2, 4, 3, 6, 5, 7
+        1, 2, 4, 3, 7, 6, 5
+        1, 2, 4, 3, 7, 5, 6
+    '''
+    graph.bft(1)
 
-    # '''
-    # Valid DFT paths:
-    #     1, 2, 3, 5, 4, 6, 7
-    #     1, 2, 3, 5, 4, 7, 6
-    #     1, 2, 4, 7, 6, 3, 5
-    #     1, 2, 4, 6, 3, 5, 7
-    # '''
+    '''
+    Valid DFT paths:
+        1, 2, 3, 5, 4, 6, 7
+        1, 2, 3, 5, 4, 7, 6
+        1, 2, 4, 7, 6, 3, 5
+        1, 2, 4, 6, 3, 5, 7
+    '''
     # graph.dft(1)
-    # graph.dft_recursive(1)
+    graph.dft_recursive(1)
 
     # '''
     # Valid BFS path:
