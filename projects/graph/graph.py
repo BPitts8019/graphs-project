@@ -55,8 +55,7 @@ class Graph:
             if cur_vertex not in visited_verticies:
                 print(cur_vertex)
                 visited_verticies.add(cur_vertex)
-            for connection in self.get_neighbors(cur_vertex):
-                if connection not in visited_verticies:
+                for connection in self.get_neighbors(cur_vertex):
                     search_queue.put(connection)
 
     def dft(self, starting_vertex):
@@ -73,8 +72,7 @@ class Graph:
             if cur_vertex not in visited_verticies:
                 print(cur_vertex)
                 visited_verticies.add(cur_vertex)
-            for connection in self.get_neighbors(cur_vertex):
-                if connection not in visited_verticies:
+                for connection in self.get_neighbors(cur_vertex):
                     search_stack.put(connection)
 
     def dft_recursive(self, cur_vertex, visited_verticies=set()):
@@ -89,10 +87,8 @@ class Graph:
 
         print(cur_vertex)
         visited_verticies.add(cur_vertex)
-
         for connection in self.get_neighbors(cur_vertex):
-            if connection not in visited_verticies:
-                self.dft_recursive(connection, visited_verticies)
+            self.dft_recursive(connection, visited_verticies)
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -113,8 +109,20 @@ class Graph:
         #    mark current vertex as visited - add to a visited_set
         #    for each connection if connection is not in visited_set
         #       enqueue a new path with connection appended
+        search_queue = Queue()
+        visited_verticies = set()
 
-        pass  # TODO
+        search_queue.put([starting_vertex])
+        while not search_queue.empty():
+            cur_path = search_queue.get()
+
+            if cur_path[-1] == destination_vertex:
+                return cur_path
+
+            if cur_path[-1] not in visited_verticies:
+                visited_verticies.add(cur_path[-1])
+                for connection in self.get_neighbors(cur_path[-1]):
+                    search_queue.put(cur_path + [connection])
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -188,13 +196,13 @@ if __name__ == '__main__':
         1, 2, 4, 6, 3, 5, 7
     '''
     # graph.dft(1)
-    graph.dft_recursive(1)
+    # graph.dft_recursive(1)
 
-    # '''
-    # Valid BFS path:
-    #     [1, 2, 4, 6]
-    # '''
-    # print(graph.bfs(1, 6))
+    '''
+    Valid BFS path:
+        [1, 2, 4, 6]
+    '''
+    print(graph.bfs(1, 6))
 
     # '''
     # Valid DFS paths:
