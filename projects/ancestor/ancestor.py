@@ -1,36 +1,49 @@
+from queue import Queue
+
+
+def addVertexTo(graph, vertex, data_point=None):
+    if vertex not in graph:
+        graph[vertex] = set()
+
+    if data_point is not None:
+        graph[vertex].add(data_point)
+
+
 def getGraphFrom(input_list):
     rtn_graph = {}
 
     for parent, child in input_list:
-        if child not in rtn_graph:
-            rtn_graph[child] = set()
-
-        rtn_graph[child].add(parent)
+        addVertexTo(rtn_graph, parent)
+        addVertexTo(rtn_graph, child, parent)
 
     return rtn_graph
 
 
 def earliest_ancestor(ancestors, starting_node):
     ancestor_data = getGraphFrom(ancestors)
-    search_stack = [starting_node]
-    visited_nodes = set()
-    early_ancestors = []
+    search_queue = Queue()
+    visited_ancestors = set()
+    earliest_ancestors = {}
 
-    while len(search_stack) > 0:
-        cur_ancestor = search_stack.pop()
-        if cur_ancestor not in visited_nodes:
-            if cur_ancestor in ancestor_data:
-                for ancestor in ancestor_data[cur_ancestor]:
-                    search_stack.append(ancestor)
-            else:
-                early_ancestors.append(cur_ancestor)
+    cur_ancestry = [starting_node]
+    search_queue.put(cur_ancestry)
+    while not search_queue.empty():
+        cur_ancestry = search_queue.get()
+        if cur_ancestry[-1] not in visited_ancestors:
+            if not ancestor_data[cur_ancestry[-1]]:
+                num_generations = len(cur_ancestry)
+                if num_generations not in earliest_ancestors or cur_ancestry[-1] < earliest_ancestors[num_generations]:
+                    earliest_ancestors[num_generations] = cur_ancestry[-1]
 
-        visited_nodes.add(cur_ancestor)
+            for ancestor in ancestor_data[cur_ancestry[-1]]:
+                search_queue.put(cur_ancestry + [ancestor])
 
-    if cur_ancestor == starting_node:
+            visited_ancestors.add(cur_ancestry[-1])
+
+    if cur_ancestry[-1] == starting_node:
         return -1
 
-    return min(early_ancestors)
+    return earliest_ancestors[max(earliest_ancestors.keys())]
 
 
 if __name__ == "__main__":
@@ -47,4 +60,4 @@ if __name__ == "__main__":
         (10, 1)
     ]
 
-    print(earliest_ancestor(ancestors, 6))
+    print(earliest_ancestor(ancestors, 8))
